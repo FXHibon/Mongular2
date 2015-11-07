@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Angular Resources">
+    <title>Mongular</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+
+
+<mongular-app></mongular-app>
+
+<!-- ES6-related imports -->
+<script src="/node_modules/es6-shim/es6-shim.min.js"></script>
+<script src="/node_modules/systemjs/dist/system-csp-production.js"></script>
+
+<script>
+    //configure system loader
+    System.config({defaultJSExtensions: true});
+</script>
+<script src="/node_modules/angular2/bundles/angular2.min.js"></script>
+<script src="/node_modules/angular2/bundles/http.min.js"></script>
+<script src="/node_modules/angular2/bundles/router.dev.min.js"></script>
+
+<script>
+    //bootstrap the Angular2 application
+    System.import('dist/mongular-app').catch(console.log.bind(console));
+</script>
+
+</body>
+</html>
