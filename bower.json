@@ -1,0 +1,21 @@
+{
+  "name": "mongular2",
+  "description": "A simple MongoDb admin tool as a support to learn Angular2 and TypeScript.",
+  "main": "",
+  "authors": [
+    "FXHibon <hibonfx@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/FXHibon/Mongular2",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Materialize": "materialize#~0.97.1"
+  }
+}
