@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 
 var PATHS = {
-    src: 'frontend/**/*.ts'
+    src: ['frontend/**/*.ts', '!frontend/bower_components/**/*.*']
 };
 
 gulp.task('clean', function (done) {
@@ -29,6 +29,5 @@ gulp.task('play', ['ts2js'], function () {
     console.log('play');
     gulp.watch(PATHS.src, ['ts2js']);
     require('./backend/app');
-
 });
 

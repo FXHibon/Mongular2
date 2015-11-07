@@ -15,11 +15,9 @@ import { DbEntity } from './bean/db-entity'
     selector: 'db-list',
     template: `
         <h5>DbList</h5>
-        <ul>
-            <li *ng-for="#db of dbs">
-            <a [router-link]="['CollectionList', {id: db.name}]">{{ db.name }}</a>
-            </li>
-        </ul>
+        <div class="collection">
+            <a class="collection-item" *ng-for="#db of dbs" href="#!" [router-link]="['CollectionList', {id: db.name}]">{{ db.name }}</a>
+        </div>
     `,
     directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES]
 })

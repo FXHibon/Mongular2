@@ -12,12 +12,15 @@
     "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-typescript": "^2.8.0",
-    "open": "0.0.5",
-    "serve-static": "^1.10.0"
+    "serve-static": "^1.10.0",
+    "bower": "1.6.4"
   },
   "dependencies": {
     "angular2": "2.0.0-alpha.45",
     "es6-shim": "^0.33.6",
     "systemjs": "0.18.4"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
   }
 }

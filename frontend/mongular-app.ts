@@ -28,8 +28,10 @@ import { CollectionList } from './collection-list';
 @Component({
     selector: 'mongular-app',
     template: `
-        <h4>MongularApp</h4>
-        <router-outlet></router-outlet>
+        <div class="container">
+            <h4>MongularApp</h4>
+            <router-outlet></router-outlet>
+        </div>
     `,
     directives: [ROUTER_DIRECTIVES]
 })
