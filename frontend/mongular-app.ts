@@ -34,6 +34,7 @@ import { CollectionList } from './collection-list';
     directives: [ROUTER_DIRECTIVES]
 })
 export class MongularApp {
+
     constructor() {
         console.log('Entering MongularApp constructor');
     }
