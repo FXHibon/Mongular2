@@ -6,9 +6,7 @@ import {
     Component,
     CORE_DIRECTIVES
 } from 'angular2/angular2';
-
 import { ROUTER_DIRECTIVES } from 'angular2/router';
-
 import { DbEntity } from './bean/db-entity'
 
 @Component({

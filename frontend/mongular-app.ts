@@ -19,21 +19,24 @@ import {
 
 import { DbList } from './db-list';
 import { CollectionList } from './collection-list';
+import { DbConnection } from './db-connection';
+import { Toolbar } from './toolbar';
 
 @RouteConfig([
     {path: '/', component: DbList, as: 'DbList'},
+    {path: '/connect', component: DbConnection, as: 'DbConnection'},
     {path: '/:id', component: CollectionList, as: 'CollectionList'}
 ])
 
 @Component({
     selector: 'mongular-app',
     template: `
+        <toolbar></toolbar>
         <div class="container">
-            <h4>MongularApp</h4>
             <router-outlet></router-outlet>
         </div>
     `,
-    directives: [ROUTER_DIRECTIVES]
+    directives: [ROUTER_DIRECTIVES, Toolbar]
 })
 export class MongularApp {
 
