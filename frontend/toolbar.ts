@@ -10,9 +10,9 @@ import { ROUTER_DIRECTIVES } from 'angular2/router';
     template: `
         <nav class="green">
             <div class="nav-wrapper">
-                <a class="brand-logo left" href="/">Mongular</a>
+                <a href class="brand-logo left" [router-link]="['DbList']">Mongular</a>
                 <ul class="right hide-on-med-and-down">
-                    <li><a href="#!" [router-link]="['DbConnection']" ><i class="material-icons">settings</i></a></li>
+                    <li><a [router-link]="['DbConnection']"><i class="material-icons">settings</i></a></li>
                 </ul>
             </div>
         </nav>

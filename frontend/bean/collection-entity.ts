@@ -4,6 +4,6 @@
 
 export class CollectionEntity {
 
-    constructor(public name:string) {
-    }
+    constructor
+    (public name:string) {}
 }

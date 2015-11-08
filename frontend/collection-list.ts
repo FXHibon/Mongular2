@@ -17,7 +17,7 @@ import { CollectionEntity } from './bean/collection-entity';
         <h6>CollectionList for {{ dbName }}</h6>
         <ul class="collection">
             <li class="collection-item" *ng-for="#collection of collections">
-            {{ collection.name }}
+                {{ collection.name }}
             </li>
         </ul>
     `,
@@ -25,8 +25,8 @@ import { CollectionEntity } from './bean/collection-entity';
 })
 export class CollectionList {
 
-    dbName:string;
-    collections:CollectionEntity[];
+    private dbName:string;
+    private collections:CollectionEntity[];
 
     constructor(params:RouteParams) {
         console.log('Entering CollectionList constructor');

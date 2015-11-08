@@ -23,8 +23,8 @@ import { DbConnection } from './db-connection';
 import { Toolbar } from './toolbar';
 
 @RouteConfig([
-    {path: '/', component: DbList, as: 'DbList'},
-    {path: '/connect', component: DbConnection, as: 'DbConnection'},
+    {path: '/dbs', component: DbList, as: 'DbList'},
+    {path: '/', component: DbConnection, as: 'DbConnection'},
     {path: '/:id', component: CollectionList, as: 'CollectionList'}
 ])
 

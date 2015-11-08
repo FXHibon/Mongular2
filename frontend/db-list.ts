@@ -14,13 +14,13 @@ import { DbEntity } from './bean/db-entity'
     template: `
         <h5>DbList</h5>
         <div class="collection">
-            <a class="collection-item" *ng-for="#db of dbs" href="#!" [router-link]="['CollectionList', {id: db.name}]">{{ db.name }}</a>
+            <a class="collection-item" *ng-for="#db of dbs" [router-link]="['CollectionList', {id: db.name}]">{{ db.name }}</a>
         </div>
     `,
     directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES]
 })
 export class DbList {
-    dbs:DbEntity[];
+    private dbs:DbEntity[];
 
     constructor() {
         console.log('Entering DbList constructor');

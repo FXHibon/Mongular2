@@ -26,7 +26,6 @@ gulp.task('ts2js', function () {
 });
 
 gulp.task('play', ['ts2js'], function () {
-    console.log('play');
     gulp.watch(PATHS.src, ['ts2js']);
     require('./backend/app');
 });
