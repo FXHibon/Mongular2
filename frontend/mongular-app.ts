@@ -21,10 +21,11 @@ import { DbList } from './db-list';
 import { CollectionList } from './collection-list';
 import { DbConnection } from './db-connection';
 import { Toolbar } from './toolbar';
+import { MongularFooter } from './mongular-footer';
 
 @RouteConfig([
-    {path: '/dbs', component: DbList, as: 'DbList'},
-    {path: '/', component: DbConnection, as: 'DbConnection'},
+    {path: '/', component: DbList, as: 'DbList'},
+    {path: '/connect', component: DbConnection, as: 'DbConnection'},
     {path: '/:id', component: CollectionList, as: 'CollectionList'}
 ])
 
@@ -35,8 +36,9 @@ import { Toolbar } from './toolbar';
         <div class="container">
             <router-outlet></router-outlet>
         </div>
+        <mongular-footer></mongular-footer>
     `,
-    directives: [ROUTER_DIRECTIVES, Toolbar]
+    directives: [ROUTER_DIRECTIVES, Toolbar, MongularFooter]
 })
 export class MongularApp {
 

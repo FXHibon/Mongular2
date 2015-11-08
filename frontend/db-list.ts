@@ -12,8 +12,8 @@ import { DbEntity } from './bean/db-entity'
 @Component({
     selector: 'db-list',
     template: `
-        <h5>DbList</h5>
-        <div class="collection">
+        <div class="collection with-header">
+            <div class="collection-header"><h3>DBs list</h3></div>
             <a class="collection-item" *ng-for="#db of dbs" [router-link]="['CollectionList', {id: db.name}]">{{ db.name }}</a>
         </div>
     `,

@@ -14,8 +14,8 @@ import { CollectionEntity } from './bean/collection-entity';
 @Component({
     selector: 'collection-list',
     template: `
-        <h6>CollectionList for {{ dbName }}</h6>
-        <ul class="collection">
+        <ul class="collection with-header">
+        <li class="collection-header"><h3>Collections list for {{ dbName }}</h3></li>
             <li class="collection-item" *ng-for="#collection of collections">
                 {{ collection.name }}
             </li>

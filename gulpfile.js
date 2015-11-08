@@ -10,7 +10,6 @@ gulp.task('clean', function (done) {
 });
 
 gulp.task('ts2js', function () {
-    console.log('ts2js');
     var typescript = require('gulp-typescript');
     var tsResult = gulp.src(PATHS.src)
         .pipe(typescript({
