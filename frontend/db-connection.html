@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col s12 l6 offset-l3">
+        <div class="card">
+            <div class="card-content">
+                <div class="card-title black-text">Server info</div>
+                <form class="col m6" #connect-form="form" (ng-submit)="submit()">
+                    <div class="row">
+                        <div class="input-field">
+                            <input id="baseUrl" type="text" class="validate" [(ng-model)]="baseUrl" required
+                                   ng-control="url-control" #url-control="form">
+                            <label for="baseUrl">MongoDb url</label>
+
+                            <div [hidden]="urlControl.valid || urlControl.pristine">
+                                Field is mandatory
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field">
+                            <input id="basePort" type="number" class="validate" [(ng-model)]="basePort" required
+                                   ng-control="port-control" #port-control="form">
+                            <label for="baseUrl">MongoDb port</label>
+
+                            <div [hidden]="portControl.valid || portControl.pristine">
+                                Field invalid
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button class="btn waves-effect waves-light" type="submit" name="action"
+                                [disabled]="!connectForm.form.valid">
+                            Connect me
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
