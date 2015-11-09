@@ -4,10 +4,12 @@
 
 import {
     Component,
-    CORE_DIRECTIVES
+    CORE_DIRECTIVES,
+    Injectable
 } from 'angular2/angular2';
 import { ROUTER_DIRECTIVES } from 'angular2/router';
 import { DbEntity } from './bean/db-entity'
+import {MongoService} from "./mongo-service";
 
 @Component({
     selector: 'db-list',
@@ -22,12 +24,9 @@ import { DbEntity } from './bean/db-entity'
 export class DbList {
     private dbs:DbEntity[];
 
-    constructor() {
+    constructor(public service:MongoService) {
         console.log('Entering DbList constructor');
-        this.dbs = [];
-        this.dbs.push(new DbEntity("Db1"));
-        this.dbs.push(new DbEntity("Db3"));
-        this.dbs.push(new DbEntity("Db4"));
-        this.dbs.push(new DbEntity("Db5"));
+        this.dbs = service.dbs;
+
     }
 }

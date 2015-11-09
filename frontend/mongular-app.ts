@@ -5,7 +5,7 @@
 import {
     bootstrap,
     provide,
-    Component
+    Component,
 } from 'angular2/angular2';
 
 import {
@@ -22,6 +22,9 @@ import { CollectionList } from './collection-list';
 import { DbConnection } from './db-connection';
 import { Toolbar } from './toolbar';
 import { MongularFooter } from './mongular-footer';
+import { MongoService } from './mongo-service';
+import {Http, HTTP_PROVIDERS} from 'angular2/http';
+
 
 @RouteConfig([
     {path: '/', component: DbList, as: 'DbList'},
@@ -38,17 +41,25 @@ import { MongularFooter } from './mongular-footer';
         </div>
         <mongular-footer></mongular-footer>
     `,
-    directives: [ROUTER_DIRECTIVES, Toolbar, MongularFooter]
+    directives: [ROUTER_DIRECTIVES, Toolbar, MongularFooter],
+    viewProviders: HTTP_PROVIDERS
 })
 export class MongularApp {
 
-    constructor() {
+    constructor(public service:MongoService) {
         console.log('Entering MongularApp constructor');
     }
 
 }
 
+let config = {
+    apiEndpoint: 'http://localhost:3000/api'
+};
+
 bootstrap(MongularApp, [
     ROUTER_PROVIDERS,
-    provide(APP_BASE_HREF, {useValue: '/'})
+    provide(APP_BASE_HREF, {useValue: '/'}),
+    provide(MongoService, {useClass: MongoService}),
+    provide('App.config', {useValue: config}),
+    provide(Http, {useClass: Http})
 ]);
