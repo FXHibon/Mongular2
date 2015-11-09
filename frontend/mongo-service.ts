@@ -15,7 +15,7 @@ export class MongoService {
 
     private _dbs:DbEntity[];
 
-    constructor(public http:Http, @Inject('App.config') public  config:any) {
+    constructor(@Inject('App.config') public  config:any) {
         console.log('Entering MongoService constructor');
         this.fetchData();
     }
