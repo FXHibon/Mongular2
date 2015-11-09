@@ -12,6 +12,10 @@ var port = 3000, app;
 app = connect().use(serveStatic(path.join(__dirname, '../dist')))
     .use(serveStatic(path.join(__dirname, '../node_modules')));
 
+app.use('/api/test', function (req, resp) {
+    resp.end('OK');
+});
+
 http.createServer(app).listen(port, function () {
     console.log('Http server listening on ', port);
 });

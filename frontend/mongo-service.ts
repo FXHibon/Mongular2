@@ -7,15 +7,15 @@ import {
     Injectable,
     Inject
 } from 'angular2/angular2';
+import { Http } from 'angular2/http';
 import { DbEntity } from "./bean/db-entity";
-import {Http, HTTP_PROVIDERS} from 'angular2/http';
 
 @Injectable()
 export class MongoService {
 
     private _dbs:DbEntity[];
 
-    constructor(@Inject('App.config') public  config:any) {
+    constructor(@Inject('App.config') public  config:any, @Inject(Http) http:Http) {
         console.log('Entering MongoService constructor');
         this.fetchData();
     }

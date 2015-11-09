@@ -5,7 +5,7 @@
 import {
     bootstrap,
     provide,
-    Component,
+    Component
 } from 'angular2/angular2';
 
 import {
@@ -41,8 +41,7 @@ import {Http, HTTP_PROVIDERS} from 'angular2/http';
         </div>
         <mongular-footer></mongular-footer>
     `,
-    directives: [ROUTER_DIRECTIVES, Toolbar, MongularFooter],
-    viewProviders: HTTP_PROVIDERS
+    directives: [ROUTER_DIRECTIVES, Toolbar, MongularFooter]
 })
 export class MongularApp {
 
@@ -58,6 +57,7 @@ let config = {
 
 bootstrap(MongularApp, [
     ROUTER_PROVIDERS,
+    HTTP_PROVIDERS,
     provide(APP_BASE_HREF, {useValue: '/'}),
     provide(MongoService, {useClass: MongoService}),
     provide('App.config', {useValue: config}),
