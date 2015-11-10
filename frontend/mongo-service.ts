@@ -25,16 +25,11 @@ export class MongoService {
     }
 
     private fetchData() {
-        this._dbs = [];
-        this._dbs.push(new DbEntity("Db1"));
-        this._dbs.push(new DbEntity("Db3"));
-        this._dbs.push(new DbEntity("Db4"));
-        this._dbs.push(new DbEntity("Db5"));
         console.log('Fetching data with config:', this.config);
-
-        this._http.getAll<DbEntity>('/test', DbEntity)
+        this._http.getAll<DbEntity>('/dbs', DbEntity)
             .then(function (data) {
                 console.log('200, received ', data);
+                this._dbs = data;
             })
             .catch(function (data) {
                 console.log(data.status + ', received ', data);

@@ -12,9 +12,19 @@ var port = 3000, app;
 app = connect().use(serveStatic(path.join(__dirname, '../dist')))
     .use(serveStatic(path.join(__dirname, '../node_modules')));
 
-app.use('/api/test', function (req, resp) {
-    resp.end('[{"name":"MyDbName"}]');
+
+var api = require('./api/main');
+var routes = require('./api/routes.json');
+
+routes.forEach(function (route) {
+    console.log('Mapping route ', route);
+    app.use('/api' + route.url, function (req, resp, next) {
+        console.log('/api' + route.url);
+        api[route.name](req, resp);
+        next();
+    });
 });
+
 
 http.createServer(app).listen(port, function () {
     console.log('Http server listening on ', port);
