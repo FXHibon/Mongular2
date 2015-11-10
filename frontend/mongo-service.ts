@@ -32,7 +32,7 @@ export class MongoService {
         this._dbs.push(new DbEntity("Db5"));
         console.log('Fetching data with config:', this.config);
 
-        this._http.getOne('/test')
+        this._http.getAll<DbEntity>('/test', DbEntity)
             .then(function (data) {
                 console.log('200, received ', data);
             })

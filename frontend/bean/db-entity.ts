@@ -4,6 +4,8 @@
 
 export class DbEntity {
 
-    constructor(
-        public name:string) {}
+    constructor(public name?:string) {
+    }
+
+
 }

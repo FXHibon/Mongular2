@@ -13,7 +13,7 @@ app = connect().use(serveStatic(path.join(__dirname, '../dist')))
     .use(serveStatic(path.join(__dirname, '../node_modules')));
 
 app.use('/api/test', function (req, resp) {
-    resp.end('OK');
+    resp.end('[{"name":"MyDbName"}]');
 });
 
 http.createServer(app).listen(port, function () {
