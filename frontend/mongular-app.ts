@@ -23,7 +23,6 @@ import { DbConnection } from './db-connection';
 import { Toolbar } from './toolbar';
 import { MongularFooter } from './mongular-footer';
 import { MongoService } from './mongo-service';
-import {Http, HTTP_PROVIDERS} from 'angular2/http';
 
 
 @RouteConfig([
@@ -57,9 +56,7 @@ let config = {
 
 bootstrap(MongularApp, [
     ROUTER_PROVIDERS,
-    HTTP_PROVIDERS,
     provide(APP_BASE_HREF, {useValue: '/'}),
     provide(MongoService, {useClass: MongoService}),
-    provide('App.config', {useValue: config}),
-    provide(Http, {useClass: Http})
+    provide('App.config', {useValue: config})
 ]);
