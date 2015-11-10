@@ -16,3 +16,4 @@
 
 * Architecture inspired by [tchatel](https://github.com/tchatel/angular2-travels.git#readme)
 * [Angular 2](https://angular.io/docs/ts/latest/guide/)
+* This is an **experiment**, you do not want to use it :D
