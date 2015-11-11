@@ -8,21 +8,36 @@ import {
 } from 'angular2/angular2';
 import { ROUTER_DIRECTIVES } from 'angular2/router';
 
+import { MongoService } from './mongo-service';
+import { Login } from './bean/login';
+
 @Component({
     selector: 'db-connection',
-    templateUrl: 'dist/db-connection.html',
+    templateUrl: 'db-connection.html',
     directives: [FORM_DIRECTIVES]
 })
 export class DbConnection {
 
     private baseUrl:string;
     private basePort:string;
+    private submitted:boolean;
 
-    constructor() {
+    constructor(private service:MongoService) {
         console.log('Entering DbConnection constructor');
+        this.submitted = false;
     }
 
     submit() {
-        console.log({url: this.baseUrl, port: this.basePort}, ' submitted!')
+        if (!this.submitted) {
+            this.submitted = true;
+            console.log({url: this.baseUrl, port: this.basePort}, ' submitted!')
+            this.service.login(new Login(this.baseUrl, this.basePort))
+                .then((msg) => {
+                    alert('Ok, now connected')
+                })
+                .catch((msg) => {
+                    alert('Not connected: ' + JSON.stringify(msg))
+                });
+        }
     }
 }

@@ -11,7 +11,8 @@ export class SimpleHttp {
     private _apiEndpoint:string;
 
     private _words = {
-        GET: 'GET'
+        GET: 'GET',
+        POST: 'POST'
     };
 
     constructor(public apiEndpoint:string) {
@@ -22,9 +23,8 @@ export class SimpleHttp {
     }
 
     public getOne<T>(resource:string, type:{ new(): T ;}, param:any = {}):Promise<T> {
-
         return new Promise<T>((resolve, reject) => {
-            let req = new XMLHttpRequest();
+            let req:XMLHttpRequest = new XMLHttpRequest();
             req.open(this._words.GET, this._apiEndpoint + resource, true);
             req.onload = (e) => {
                 if (req.readyState === 4) {
@@ -34,12 +34,7 @@ export class SimpleHttp {
                         data = this.json2entity<T>(JSON.parse(req.responseText || '{}'), type);
                         resolve(data);
                     } else {
-                        let data = {
-                            status: req.status,
-                            statusText: req.statusText,
-                            msg: req.responseText || ''
-                        };
-                        reject(data);
+                        this.buildError(req, reject);
                     }
                 }
             };
@@ -48,11 +43,20 @@ export class SimpleHttp {
         });
     }
 
+    private buildError(req:XMLHttpRequest, reject) {
+        let data = {
+            status: req.status,
+            statusText: req.statusText,
+            msg: req.responseText || ''
+        };
+        reject(data);
+    };
+
     public getAll<T>(resource:string, type:{ new(): T;}, param:any = {}):Promise<T[]> {
         let promise = new Promise<T[]>((resolve, reject) => {
-            let req = new XMLHttpRequest();
+            let req:XMLHttpRequest = new XMLHttpRequest();
             req.open(this._words.GET, this._apiEndpoint + resource, true);
-            req.onload = (e) => {
+            req.onload = () => {
                 if (req.readyState === 4) {
                     if (req.status === 200) {
                         let data:T[];
@@ -60,12 +64,7 @@ export class SimpleHttp {
                         data = this.json2entities<T[]>(JSON.parse(req.responseText || '[]'), type);
                         resolve(data);
                     } else {
-                        let data = {
-                            status: req.status,
-                            statusText: req.statusText,
-                            msg: req.responseText || ''
-                        };
-                        reject(data);
+                        this.buildError(req, reject)
                     }
                 }
             };
@@ -74,6 +73,28 @@ export class SimpleHttp {
         });
 
         return promise;
+    }
+
+    public post<T>(resource:String, param:any):Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+
+            let req = new XMLHttpRequest();
+            req.open(this._words.POST, this._apiEndpoint + resource, true);
+            let jsonParam = JSON.stringify(param);
+            req.send(jsonParam);
+            req.onload = () => {
+                if (req.readyState === 4) {
+                    if (req.status === 200) {
+                        let data:T;
+                        console.log('Parsing:', req.responseText);
+                        data = JSON.parse(req.responseText) || {};
+                        resolve(data);
+                    } else {
+                        this.buildError(req, reject)
+                    }
+                }
+            };
+        });
     }
 
     /**

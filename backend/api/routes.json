@@ -1,6 +1,12 @@
 [
   {
     "name": "getDbs",
-    "url": "/dbs"
+    "url": "/dbs",
+    "method": "get"
+  },
+  {
+    "name": "login",
+    "url": "/login",
+    "method": "post"
   }
 ]

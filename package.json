@@ -8,7 +8,6 @@
   },
   "homepage": "https://github.com/tchatel/FXHibon/Mongular2.git#readme",
   "devDependencies": {
-    "connect": "^3.4.0",
     "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-typescript": "^2.8.0",
@@ -17,7 +16,11 @@
   },
   "dependencies": {
     "angular2": "2.0.0-alpha.45",
+    "body-parser": "^1.14.1",
     "es6-shim": "^0.33.6",
+    "express": "^4.13.3",
+    "mongodb": "^2.0.48",
+    "morgan": "^1.6.1",
     "systemjs": "0.18.4"
   },
   "scripts": {

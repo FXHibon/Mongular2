@@ -4,16 +4,11 @@
 
 import {
     Component,
-    CORE_DIRECTIVES,
-    Injectable
+    CORE_DIRECTIVES
 } from 'angular2/angular2';
 import { ROUTER_DIRECTIVES } from 'angular2/router';
-import {
-    Http,
-    HTTP_PROVIDERS
-} from 'angular2/http';
 import { DbEntity } from './bean/db-entity'
-import {MongoService} from "./mongo-service";
+import { MongoService } from "./mongo-service";
 
 @Component({
     selector: 'db-list',
@@ -23,14 +18,18 @@ import {MongoService} from "./mongo-service";
             <a class="collection-item" *ng-for="#db of dbs" [router-link]="['CollectionList', {id: db.name}]">{{ db.name }}</a>
         </div>
     `,
-    directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES],
-    viewProviders: [HTTP_PROVIDERS]
+    directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES]
 })
 export class DbList {
     private dbs:DbEntity[] = [];
 
-    constructor(public service:MongoService, http:Http) {
+    constructor(public service:MongoService) {
         console.log('Entering DbList constructor');
-        this.dbs = service.dbs;
+        service.dbs.then((dbs) => {
+                this.dbs = dbs;
+            })
+            .catch((data) => {
+                console.log('Error: ', data);
+            });
     }
 }
