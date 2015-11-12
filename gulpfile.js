@@ -1,8 +1,9 @@
 var gulp = require('gulp');
-
+var mocha = require('gulp-mocha');
 var PATHS = {
     src: ['frontend/**/*.ts'],
-    raw: ['frontend/**/*.*', '!frontend/**/*.ts']
+    raw: ['frontend/**/*.*', '!frontend/**/*.ts'],
+    test: ['test/**/*.spec.js']
 };
 
 gulp.task('clean', function (done) {
@@ -23,6 +24,11 @@ gulp.task('ts2js', function () {
         }));
 
     return tsResult.js.pipe(gulp.dest('dist'));
+});
+
+gulp.task('test', function () {
+    gulp.src(PATHS.test, {read: false})
+        .pipe(mocha({reporter: 'spec'}));
 });
 
 gulp.task('raw', function () {

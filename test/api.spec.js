@@ -28,7 +28,6 @@ describe('api', function () {
 
         it('should NOT connect to 127.0.0.1:5000', function (done) {
             api.login({body: {url: '127.0.0.1', port: 5000}}, {}, function (err, msg) {
-                console.log(api);
                 assert(err instanceof ServerNotFoundException, 'Server should not have been found');
                 done();
             });
@@ -66,4 +65,28 @@ describe('api', function () {
 
         });
     });
+
+    describe('.logout()', function () {
+
+        beforeEach(function () {
+            api = require('../backend/api/api');
+            console.log('new API');
+        });
+
+        it('should disconnect', function (done) {
+            api.login({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, res) {
+                if (err) throw err;
+                api.logout({}, {}, function (err, res) {
+                    if (err) throw err;
+                    done();
+                });
+            });
+        });
+
+        it('should not disconnect', function () {
+            api.logout({}, {}, function (err, res) {
+                assert(err instanceof NotConnectedException, 'the logout operation should have failed');
+            });
+        });
+    })
 });
