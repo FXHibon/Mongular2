@@ -43,15 +43,6 @@ export class SimpleHttp {
         });
     }
 
-    private buildError(req:XMLHttpRequest, reject) {
-        let data = {
-            status: req.status,
-            statusText: req.statusText,
-            msg: req.responseText || ''
-        };
-        reject(data);
-    };
-
     public getAll<T>(resource:string, type:{ new(): T;}, param:any = {}):Promise<T[]> {
         let promise = new Promise<T[]>((resolve, reject) => {
             let req:XMLHttpRequest = new XMLHttpRequest();
@@ -80,6 +71,7 @@ export class SimpleHttp {
 
             let req = new XMLHttpRequest();
             req.open(this._words.POST, this._apiEndpoint + resource, true);
+            req.setRequestHeader("Content-Type", "application/json");
             let jsonParam = JSON.stringify(param);
             req.send(jsonParam);
             req.onload = () => {
@@ -96,6 +88,15 @@ export class SimpleHttp {
             };
         });
     }
+
+    private buildError(req:XMLHttpRequest, reject:any) {
+        let data = {
+            status: req.status,
+            statusText: req.statusText,
+            msg: req.responseText || ''
+        };
+        reject(data);
+    };
 
     /**
      * Try to create an T instance using json in parameter

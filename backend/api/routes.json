@@ -8,5 +8,10 @@
     "name": "login",
     "url": "/login",
     "method": "post"
+  },
+  {
+    "name": "logout",
+    "url": "/logout",
+    "method": "post"
   }
 ]

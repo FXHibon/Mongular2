@@ -23,10 +23,10 @@ var ServerNotFoundException = require('./services/mongo-service').ServerNotFound
 var NotConnectedException = require('./services/mongo-service').NotConnectedException;
 
 // Middle wares
-app.use(morgan('combined'));
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, '../dist')));
 app.use(express.static(path.join(__dirname, '../node_modules')));
@@ -38,13 +38,13 @@ routes.forEach(function (route) {
         api[route.name](req, resp, function (err, res) {
             var code, data;
             if (err) {
-                data = err.getMessage();
+                data = err.toString();
                 if (err instanceof InvalidUrlException) {
                     code = 400;
                 } else if (err instanceof ServerNotFoundException) {
                     code = 404
                 } else if (err instanceof NotConnectedException) {
-                    code = Unauthorized;
+                    code = 403;
                 } else {
                     code = 400
                 }

@@ -53,7 +53,6 @@ exports.NotConnectedException = function () {
  * @private
  */
 var _parse = function (req) {
-    logger(req);
     if (req.url && req.port) {
         return 'mongodb://' + req.url + ':' + req.port;
     }
@@ -101,7 +100,7 @@ exports.getDbs = function (req, resp, cb) {
             } else {
                 logger(data);
             }
-            cb(null, [{name: 'Db1'}]);
+            cb(null, data.databases);
         });
     } else {
         cb(new exports.NotConnectedException());
