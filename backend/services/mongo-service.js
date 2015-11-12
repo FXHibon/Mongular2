@@ -3,20 +3,32 @@
  */
 
 var mongoClient = require('mongodb').MongoClient;
-
+var logger = require('debug')('Mongular2:MongoService');
 var currentDb;
 
-exports.getDbs = function (cb) {
-    console.log(currentDb);
-    cb([{name: 'Db1'}]);
+exports.getDbs = function (req, resp, cb) {
+    cb(200, [{name: 'Db1'}]);
 };
 
-exports.login = function (cb) {
-    mongoClient.connect('mongodb://localhost:27017', function (err, db) {
+var _connect = function (cb) {
+    var address = 'mongodb://localhost:27017';
+    logger('connecting to ', address);
+    mongoClient.connect(address, function (err, db) {
         if (err) {
-            cb(err);
+            cb(400, err);
         } else {
             currentDb = db;
+            cb(200, {});
         }
     });
+};
+exports.login = function (req, resp, cb) {
+    if (currentDb) {
+        logger('Should disconnect db');
+        currentDb.close(function () {
+            _connect(cb);
+        });
+    } else {
+        _connect(cb);
+    }
 };

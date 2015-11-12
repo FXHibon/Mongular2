@@ -5,6 +5,6 @@
 export class Login {
 
     constructor(public url:string,
-                port:string) {
+                public port:string) {
     }
 }

@@ -11,7 +11,7 @@ import { ROUTER_DIRECTIVES } from 'angular2/router';
         <nav class="green">
             <div class="nav-wrapper">
                 <a href class="brand-logo left" [router-link]="['DbList']">Mongular</a>
-                <ul class="right hide-on-med-and-down">
+                <ul class="right hide-on-small-and-down">
                     <li><a [router-link]="['DbConnection']"><i class="material-icons">settings</i></a></li>
                 </ul>
             </div>

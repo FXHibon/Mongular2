@@ -5,33 +5,38 @@
 var http = require('http');
 var express = require('express');
 var path = require('path');
-var serveStatic = require('serve-static');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var logger = require('debug')('Mongular2:app');
 
 var port = 3000, app;
 
 app = express();
 
-var api = require('./api/main');
+var api = require('./api/api');
 var routes = require('./api/routes.json');
 
 // Middle wares
-app.use(serveStatic(path.join(__dirname, '../dist')));
-app.use(serveStatic(path.join(__dirname, '../node_modules')));
+app.use(morgan('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(cookieParser());
 
-app.use(morgan('combined'));
+app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static(path.join(__dirname, '../node_modules')));
 
 // Mapping routes
 routes.forEach(function (route) {
-    console.log('Mapping route ', route);
-    app[route.method]('/api' + route.url, function (req, resp, next) {
-        api[route.name](req, resp);
-        next();
+    logger('Mapping route ', route);
+    app[route.method]('/api' + route.url, function (req, resp) {
+        api[route.name](req, resp, function (code, data) {
+            resp.status(code).json(data);
+        });
     });
 });
 
 // Start server
 http.createServer(app).listen(port, function () {
-    console.log('Http server listening on ', port);
+    logger('Http server listening on ', port);
 });
