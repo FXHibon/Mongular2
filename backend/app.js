@@ -18,10 +18,10 @@ var api = require('./api/api');
 var routes = require('./api/routes.json');
 
 // Middle wares
-app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(morgan('combined'));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, '../dist')));
 app.use(express.static(path.join(__dirname, '../node_modules')));

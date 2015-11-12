@@ -10,8 +10,18 @@ exports.getDbs = function (req, resp, cb) {
     cb(200, [{name: 'Db1'}]);
 };
 
-var _connect = function (cb) {
-    var address = 'mongodb://localhost:27017';
+function _parse(req) {
+    if (req.url && req.port) {
+        return 'mongodb://' + req.url + ':' + req.port;
+    }
+    return undefined;
+}
+var _connect = function (req, cb) {
+    var address = _parse(req);
+    if (!address) {
+        cb(400, {msg: 'Url format not valid'});
+        return;
+    }
     logger('connecting to ', address);
     mongoClient.connect(address, function (err, db) {
         if (err) {
@@ -22,13 +32,13 @@ var _connect = function (cb) {
         }
     });
 };
-exports.login = function (req, resp, cb) {
+exports.login = function (req, cb) {
     if (currentDb) {
         logger('Should disconnect db');
         currentDb.close(function () {
-            _connect(cb);
+            _connect(req, cb);
         });
     } else {
-        _connect(cb);
+        _connect(req, cb);
     }
 };

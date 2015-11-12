@@ -10,7 +10,5 @@ module.exports.getDbs = function (req, resp, cb) {
 };
 
 module.exports.login = function (req, resp, cb) {
-    logger('Body: ', req.body);
-    logger('Params: ', req.params);
-    mongoService.login(req, resp, cb);
+    mongoService.login(req.body, cb);
 };
