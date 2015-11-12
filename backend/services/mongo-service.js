@@ -11,14 +11,21 @@ var currentDb;
 
 exports.InvalidUrlException = function (address) {
     this.message = address + ' is not a valid url';
-    this.getMessage = function () {
+    this.toString = function () {
         return this.message;
     };
 };
 
 exports.ServerNotFoundException = function (err) {
     this.message = 'Server not found: ' + err;
-    this.getMessage = function () {
+    this.toString = function () {
+        return this.message;
+    };
+};
+
+exports.NotConnectedException = function () {
+    this.message = 'You must be connected in order to perform this operation';
+    this.toString = function () {
         return this.message;
     };
 };
@@ -32,11 +39,10 @@ exports.getDbs = function (req, resp, cb) {
             } else {
                 logger(data);
             }
-            cb([{name: 'Db1'}]);
+            cb(null, [{name: 'Db1'}]);
         });
-        cb(200, [{name: 'Db1'}]);
     } else {
-        cb(403, {msg: 'Not connected'})
+        cb(new exports.NotConnectedException());
     }
 };
 
