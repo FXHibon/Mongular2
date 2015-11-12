@@ -3,10 +3,11 @@
  */
 
 var assert = require('assert');
-var api;
 var ServerNotFoundException = require('../backend/services/mongo-service').ServerNotFoundException;
 var InvalidUrlException = require('../backend/services/mongo-service').InvalidUrlException;
 var NotConnectedException = require('../backend/services/mongo-service').NotConnectedException;
+
+var api;
 
 describe('api', function () {
     describe('.login()', function () {
@@ -53,12 +54,13 @@ describe('api', function () {
             })
         });
 
-        it('should get dbs', function () {
+        it('should get dbs', function (done) {
             api.login({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, res) {
                 if (err) throw err;
                 api.getDbs({}, {}, function (err, data) {
                     if (err) throw err;
                     assert(data, 'Data should not be undefined');
+                    done();
                 })
             });
 
