@@ -28,7 +28,7 @@ gulp.task('ts2js', function () {
 
 gulp.task('test', function () {
     gulp.src(PATHS.test, {read: false})
-        .pipe(mocha({reporter: 'spec'}));
+        .pipe(mocha({reporter: 'list'}));
 });
 
 gulp.task('raw', function () {

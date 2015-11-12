@@ -70,7 +70,6 @@ describe('api', function () {
 
         beforeEach(function () {
             api = require('../backend/api/api');
-            console.log('new API');
         });
 
         it('should disconnect', function (done) {

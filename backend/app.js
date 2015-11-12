@@ -17,6 +17,11 @@ app = express();
 var api = require('./api/api');
 var routes = require('./api/routes.json');
 
+// TODO: refactor => it should not be here
+var InvalidUrlException = require('./services/mongo-service').InvalidUrlException;
+var ServerNotFoundException = require('./services/mongo-service').ServerNotFoundException;
+var NotConnectedException = require('./services/mongo-service').NotConnectedException;
+
 // Middle wares
 app.use(morgan('combined'));
 app.use(cookieParser());
@@ -30,7 +35,23 @@ app.use(express.static(path.join(__dirname, '../node_modules')));
 routes.forEach(function (route) {
     logger('Mapping route ', route);
     app[route.method]('/api' + route.url, function (req, resp) {
-        api[route.name](req, resp, function (code, data) {
+        api[route.name](req, resp, function (err, res) {
+            var code, data;
+            if (err) {
+                data = err.getMessage();
+                if (err instanceof InvalidUrlException) {
+                    code = 400;
+                } else if (err instanceof ServerNotFoundException) {
+                    code = 404
+                } else if (err instanceof NotConnectedException) {
+                    code = Unauthorized;
+                } else {
+                    code = 400
+                }
+            } else {
+                code = 200;
+                data = res;
+            }
             resp.status(code).json(data);
         });
     });

@@ -79,7 +79,6 @@ var _connect = function (req, cb) {
         if (err) {
             cb(new exports.ServerNotFoundException(err));
         } else {
-            console.log('connection');
             currentDb = db;
             cb(null, {});
         }
@@ -129,7 +128,6 @@ exports.login = function (req, cb) {
  * @param cb Callback
  */
 exports.logout = function (cb) {
-    console.log(currentDb);
     if (currentDb) {
         currentDb.close();
         currentDb = null;
