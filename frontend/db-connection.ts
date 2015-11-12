@@ -33,10 +33,13 @@ export class DbConnection {
             console.log({url: this.baseUrl, port: this.basePort}, ' submitted!')
             this.service.login(new Login(this.baseUrl, this.basePort))
                 .then((msg) => {
-                    alert('Ok, now connected')
+                    console.log('Ok, now connected');
                 })
                 .catch((msg) => {
-                    alert('Not connected: ' + JSON.stringify(msg))
+                    console.log('Not connected: ' + JSON.stringify(msg))
+                })
+                .then(() => {
+                    this.submitted = false;
                 });
         }
     }
