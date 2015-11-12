@@ -8,10 +8,12 @@
   },
   "homepage": "https://github.com/tchatel/FXHibon/Mongular2.git#readme",
   "devDependencies": {
+    "bower": "1.6.4",
+    "chai": "^3.4.1",
     "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-typescript": "^2.8.0",
-    "bower": "1.6.4"
+    "mocha": "^2.3.3"
   },
   "dependencies": {
     "angular2": "2.0.0-alpha.45",

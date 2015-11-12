@@ -6,35 +6,70 @@ var mongoClient = require('mongodb').MongoClient;
 var logger = require('debug')('Mongular2:MongoService');
 var currentDb;
 
+
+// EXCEPTIONS;
+
+exports.InvalidUrlException = function (address) {
+    this.message = address + ' is not a valid url';
+    this.getMessage = function () {
+        return this.message;
+    };
+};
+
+exports.ServerNotFoundException = function (err) {
+    this.message = 'Server not found: ' + err;
+    this.getMessage = function () {
+        return this.message;
+    };
+};
+
+
 exports.getDbs = function (req, resp, cb) {
-    cb(200, [{name: 'Db1'}]);
+    if (currentDb) {
+        currentDb.admin().listDatabases(function (err, data) {
+            if (err) {
+                logger(err);
+            } else {
+                logger(data);
+            }
+            cb([{name: 'Db1'}]);
+        });
+        cb(200, [{name: 'Db1'}]);
+    } else {
+        cb(403, {msg: 'Not connected'})
+    }
 };
 
 function _parse(req) {
+    logger(req);
     if (req.url && req.port) {
         return 'mongodb://' + req.url + ':' + req.port;
     }
     return undefined;
 }
+
+
 var _connect = function (req, cb) {
     var address = _parse(req);
+
+    logger('Trying to connect to ', address);
     if (!address) {
-        cb(400, {msg: 'Url format not valid'});
+        cb(new exports.InvalidUrlException(address));
         return;
     }
-    logger('connecting to ', address);
+
     mongoClient.connect(address, function (err, db) {
         if (err) {
-            cb(400, err);
+            cb(new exports.ServerNotFoundException(err));
         } else {
             currentDb = db;
-            cb(200, {});
+            cb(null, {});
         }
     });
 };
+
 exports.login = function (req, cb) {
     if (currentDb) {
-        logger('Should disconnect db');
         currentDb.close(function () {
             _connect(req, cb);
         });
