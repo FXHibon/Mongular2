@@ -7,6 +7,12 @@
 * `npm install -g gulp` to install gulp globally
 * `npm install` to install dependencies
 
+## Run tests
+
+* `mocha`
+or
+* `gulp test`
+
 ## Play
 
 * `gulp play` 
