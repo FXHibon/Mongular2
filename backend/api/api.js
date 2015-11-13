@@ -16,3 +16,7 @@ exports.login = function (req, resp, cb) {
 exports.logout = function (req, resp, cb) {
     mongoService.logout(cb);
 };
+
+exports.getCollections = function (req, resp, cb) {
+    mongoService.getCollections(req.body, cb);
+};

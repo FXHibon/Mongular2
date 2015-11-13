@@ -87,5 +87,28 @@ describe('api', function () {
                 assert(err instanceof NotConnectedException, 'the logout operation should have failed');
             });
         });
-    })
+    });
+
+    describe('.getCollections()', function () {
+
+        beforeEach(function () {
+            api = require('../backend/api/api');
+        });
+
+        it('should not get collections', function () {
+            api.getCollections({body: {dbName: 'test'}}, {}, function (err, data) {
+                assert(err instanceof NotConnectedException, 'db should not be connected: ' + err);
+            })
+        });
+
+        it('should not get collections', function (done) {
+            api.login({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, res) {
+                if (err) throw err;
+                api.getCollections({body: {dbName: 'test'}}, {}, function (err, data) {
+                    if (err) throw err;
+                    done();
+                })
+            });
+        });
+    });
 });

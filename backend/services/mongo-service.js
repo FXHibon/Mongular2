@@ -44,6 +44,17 @@ exports.NotConnectedException = function () {
     };
 };
 
+/**
+ * Exception when invalid parameter
+ * @constructor
+ */
+exports.InvalidParameterException = function (msg) {
+    this.message = 'Invalid parameter for asked operation: ' + msg;
+    this.toString = function () {
+        return this.message;
+    };
+};
+
 // Private Methods
 
 /**
@@ -131,6 +142,41 @@ exports.logout = function (cb) {
         currentDb.close();
         currentDb = null;
         cb(null, {});
+    } else {
+        cb(new exports.NotConnectedException());
+    }
+};
+
+/**
+ * List collections for given db, if connected
+ * @param req Db name {dbName:string}
+ * @param cb Callback
+ */
+exports.getCollections = function (req, cb) {
+    console.log(req);
+    if (currentDb) {
+        var db = req.dbName;
+        if (db) {
+            console.log(db);
+            currentDb.open(db, function (err, db) {
+                console.log(err);
+                if (err) {
+                    cb(Error('Can not open given db: ' + err));
+                } else {
+                    db.listCollections().toArray(function (err, items) {
+                        if (err) {
+                            cb(Error('Unexpected error: ' + err));
+                        } else {
+                            logger(items);
+                            cb(null, []);
+                        }
+                    });
+                }
+            });
+        } else {
+            cb(new exports.InvalidParameterException('dbName = ' + db));
+        }
+
     } else {
         cb(new exports.NotConnectedException());
     }
