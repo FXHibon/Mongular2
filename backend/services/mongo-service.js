@@ -106,7 +106,7 @@ exports.getDbs = function (req, resp, cb) {
     _getAdminDb(req, function (err, client) {
         if (err) cb(err);
         client.admin().listDatabases(function (err, res) {
-            client.close();
+            client && client.close();
             if (err) {
                 logger(err);
                 cb(err);
@@ -125,7 +125,7 @@ exports.getDbs = function (req, resp, cb) {
  */
 exports.login = function (req, cb) {
     _getAdminDb(req, function (err, res) {
-        res.close();
+        res && res.close();
         if (err) cb(err);
         cb(null, {});
     });
@@ -156,7 +156,7 @@ exports.getCollections = function (req, cb) {
         if (err) cb(Error('Can not open given db' + err.toString()));
 
         db.listCollections().toArray(function (err, collections) {
-            db.close();
+            db && db.close();
             if (err) cb(err);
             logger(collections);
             cb(null, collections);
