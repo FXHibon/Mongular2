@@ -5,11 +5,12 @@
 var assert = require('assert');
 var ServerNotFoundException = require('../backend/services/mongo-service').ServerNotFoundException;
 var InvalidUrlException = require('../backend/services/mongo-service').InvalidUrlException;
-var NotConnectedException = require('../backend/services/mongo-service').NotConnectedException;
+var InvalidParameterException = require('../backend/services/mongo-service').InvalidParameterException;
 
 var api;
 
 describe('api', function () {
+
     describe('.login()', function () {
 
         beforeEach(function () {
@@ -47,45 +48,13 @@ describe('api', function () {
             api = require('../backend/api/api');
         });
 
-        it('should not get dbs', function () {
-            api.getDbs({}, {}, function (err, data) {
-                assert(err instanceof NotConnectedException, 'db should not be connected: ' + err);
-            })
-        });
-
         it('should get dbs', function (done) {
-            api.login({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, res) {
+            api.getDbs({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, data) {
                 if (err) throw err;
-                api.getDbs({}, {}, function (err, data) {
-                    if (err) throw err;
-                    assert(data, 'Data should not be undefined');
-                    done();
-                })
+                assert(data, 'Data should not be undefined');
+                done();
             });
 
-        });
-    });
-
-    describe('.logout()', function () {
-
-        beforeEach(function () {
-            api = require('../backend/api/api');
-        });
-
-        it('should disconnect', function (done) {
-            api.login({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, res) {
-                if (err) throw err;
-                api.logout({}, {}, function (err, res) {
-                    if (err) throw err;
-                    done();
-                });
-            });
-        });
-
-        it('should not disconnect', function () {
-            api.logout({}, {}, function (err, res) {
-                assert(err instanceof NotConnectedException, 'the logout operation should have failed');
-            });
         });
     });
 
@@ -95,19 +64,17 @@ describe('api', function () {
             api = require('../backend/api/api');
         });
 
-        it('should not get collections', function () {
-            api.getCollections({body: {dbName: 'test'}}, {}, function (err, data) {
-                assert(err instanceof NotConnectedException, 'db should not be connected: ' + err);
-            })
+        it('should get collections', function (done) {
+            api.getCollections({body: {url: '127.0.0.1', port: 27017, dbName: 'test'}}, {}, function (err, data) {
+                if (err) throw err;
+                done();
+            });
         });
 
         it('should not get collections', function (done) {
-            api.login({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, res) {
-                if (err) throw err;
-                api.getCollections({body: {dbName: 'test'}}, {}, function (err, data) {
-                    if (err) throw err;
-                    done();
-                })
+            api.getCollections({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, data) {
+                assert(err instanceof InvalidParameterException, 'parameter should not have been accepted');
+                done();
             });
         });
     });

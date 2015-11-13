@@ -2,9 +2,10 @@
  * Created by fx on 11/11/15.
  */
 
-var mongoClient = require('mongodb').MongoClient;
+var MongoClient = require('mongodb').MongoClient;
+var Server = require('mongodb').Server;
+var Db = require('mongodb').Db;
 var logger = require('debug')('Mongular2:MongoService');
-var currentDb = undefined;
 
 
 // EXCEPTIONS;
@@ -15,7 +16,7 @@ var currentDb = undefined;
  * @constructor
  */
 exports.InvalidUrlException = function (address) {
-    this.message = address + ' is not a valid url';
+    this.message = 'Can not build server with ' + JSON.stringify(address);
     this.toString = function () {
         return this.message;
     };
@@ -27,18 +28,7 @@ exports.InvalidUrlException = function (address) {
  * @constructor
  */
 exports.ServerNotFoundException = function (err) {
-    this.message = 'Server not found: ' + err;
-    this.toString = function () {
-        return this.message;
-    };
-};
-
-/**
- * Exception when asking for operation that need to be connected
- * @constructor
- */
-exports.NotConnectedException = function () {
-    this.message = 'You must be connected in order to perform this operation';
+    this.message = 'Server not found: ' + JSON.stringify(err);
     this.toString = function () {
         return this.message;
     };
@@ -58,39 +48,48 @@ exports.InvalidParameterException = function (msg) {
 // Private Methods
 
 /**
- * Parse given url object
+ * Parse given url object and return corresponding Server instance
  * @param req Object {url:string, port:number}
- * @returns {string|undefined}
+ * @returns {Server|undefined}
  * @private
  */
-var _parse = function (req) {
+var _buildServer = function (req) {
     if (req.url && req.port) {
-        return 'mongodb://' + req.url + ':' + req.port;
+        return new Server(req.url, req.port);
     }
     return undefined;
 };
 
+/**
+ * Extract connection string
+ * @see https://docs.mongodb.org/manual/reference/connection-string/#standard-connection-string-format
+ * @param server Server
+ * @return string Connection string
+ * @private
+ */
+var _getConnectionString = function (server) {
+    return 'mongodb://' + server.host + ':' + server.port;
+};
 /**
  * Connect to given database
  * @param req Database address
  * @param cb Callback
  * @private
  */
-var _connect = function (req, cb) {
-    var address = _parse(req);
+var _getAdminDb = function (req, cb) {
 
-    logger('Trying to connect to ', address);
-    if (!address) {
-        cb(new exports.InvalidUrlException(address));
+    var server = _buildServer(req);
+    if (!server) {
+        cb(new exports.InvalidUrlException(req));
         return;
     }
+    logger('Trying to connect to ', _getConnectionString(server));
 
-    mongoClient.connect(address, function (err, db) {
+    MongoClient.connect(_getConnectionString(server), {native_parser: true}, function (err, adminDb) {
         if (err) {
             cb(new exports.ServerNotFoundException(err));
         } else {
-            currentDb = db;
-            cb(null, {});
+            cb(null, adminDb);
         }
     });
 };
@@ -98,24 +97,24 @@ var _connect = function (req, cb) {
 // public Methods
 
 /**
- * List databases for current db, if any
- * @param req
+ * List databases for given server, if any
+ * @param req Request {url:string, port:number}
  * @param resp
  * @param cb Callback
  */
 exports.getDbs = function (req, resp, cb) {
-    if (currentDb) {
-        currentDb.admin().listDatabases(function (err, data) {
+    _getAdminDb(req, function (err, client) {
+        if (err) cb(err);
+        client.admin().listDatabases(function (err, res) {
             if (err) {
                 logger(err);
+                cb(err);
             } else {
-                logger(data);
+                logger(res.databases);
+                cb(null, res.databases);
             }
-            cb(null, data.databases);
         });
-    } else {
-        cb(new exports.NotConnectedException());
-    }
+    });
 };
 
 /**
@@ -124,27 +123,7 @@ exports.getDbs = function (req, resp, cb) {
  * @param cb Callback
  */
 exports.login = function (req, cb) {
-    if (currentDb) {
-        currentDb.close(function () {
-            _connect(req, cb);
-        });
-    } else {
-        _connect(req, cb);
-    }
-};
-
-/**
- * Disconnect from current database, if any
- * @param cb Callback
- */
-exports.logout = function (cb) {
-    if (currentDb) {
-        currentDb.close();
-        currentDb = null;
-        cb(null, {});
-    } else {
-        cb(new exports.NotConnectedException());
-    }
+    _getAdminDb(req, cb);
 };
 
 /**
@@ -153,31 +132,28 @@ exports.logout = function (cb) {
  * @param cb Callback
  */
 exports.getCollections = function (req, cb) {
-    console.log(req);
-    if (currentDb) {
-        var db = req.dbName;
-        if (db) {
-            console.log(db);
-            currentDb.open(db, function (err, db) {
-                console.log(err);
-                if (err) {
-                    cb(Error('Can not open given db: ' + err));
-                } else {
-                    db.listCollections().toArray(function (err, items) {
-                        if (err) {
-                            cb(Error('Unexpected error: ' + err));
-                        } else {
-                            logger(items);
-                            cb(null, []);
-                        }
-                    });
-                }
-            });
-        } else {
-            cb(new exports.InvalidParameterException('dbName = ' + db));
-        }
 
-    } else {
-        cb(new exports.NotConnectedException());
+    var db = req.dbName;
+
+    if (!db) {
+        cb(new exports.InvalidParameterException('dbName = ' + db));
+        return;
     }
+
+    var server = _buildServer(req);
+    if (!server) {
+        cb(exports.InvalidUrlException(req));
+        return;
+    }
+
+    var db = new Db(db, server);
+    db.open(function (err, db) {
+        if (err) cb(Error('Can not open given db' + err.toString()));
+
+        db.listCollections().toArray(function (err, collections) {
+            if (err) cb(err);
+            cb(null, collections);
+        });
+
+    });
 };

@@ -6,7 +6,7 @@ var mongoService = require('../services/mongo-service');
 var logger = require('debug')('Mongular2:api');
 
 exports.getDbs = function (req, resp, cb) {
-    mongoService.getDbs(req, resp, cb);
+    mongoService.getDbs(req.body, resp, cb);
 };
 
 exports.login = function (req, resp, cb) {
