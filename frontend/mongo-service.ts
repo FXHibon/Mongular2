@@ -16,22 +16,31 @@ import { Login } from './bean/login';
 export class MongoService {
 
     private _http:SimpleHttp;
+    private _login:Login;
 
     constructor(@Inject('App.config') private  config:any) {
         console.log('Entering MongoService constructor');
         this._http = new SimpleHttp(this.config.apiEndpoint);
     }
 
-    get dbs():Promise<DbEntity[]> {
-        return this._http.getAll<DbEntity>('/dbs', DbEntity);
+    public dbs():Promise<DbEntity[]> {
+        return this._http.getAll<DbEntity>('/dbs', DbEntity, this._login);
     }
 
 
-    get collections():Promise<CollectionEntity[]> {
-        return this._http.getAll<CollectionEntity>('/collections', CollectionEntity);
+    public collections(collectionName:string):Promise<CollectionEntity[]> {
+        //noinspection TypeScriptValidateTypes
+        return this._http.getAll<CollectionEntity>('/collections', CollectionEntity, this._login, {collectionName: collectionName});
     }
 
     public login(login:Login):Promise<any> {
-        return this._http.post<any>('/login', login);
+        return this._http.post<any>('/login', login)
+            .then(() => {
+                this._login = login;
+            });
+    }
+
+    get isConnected():boolean {
+        return this._login != undefined && this._login != null;
     }
 }

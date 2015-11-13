@@ -25,7 +25,8 @@ export class SimpleHttp {
     public getOne<T>(resource:string, type:{ new(): T ;}, param:any = {}):Promise<T> {
         return new Promise<T>((resolve, reject) => {
             let req:XMLHttpRequest = new XMLHttpRequest();
-            req.open(this._words.GET, this._apiEndpoint + resource, true);
+            req.open(this._words.GET, this._apiEndpoint + resource + this.formatUrlParams(param), true);
+            req.setRequestHeader('Content-Type', 'application/json');
             req.onload = (e) => {
                 if (req.readyState === 4) {
                     if (req.status === 200) {
@@ -38,15 +39,15 @@ export class SimpleHttp {
                     }
                 }
             };
-
             req.send();
         });
     }
 
-    public getAll<T>(resource:string, type:{ new(): T;}, param:any = {}):Promise<T[]> {
-        let promise = new Promise<T[]>((resolve, reject) => {
+    public getAll<T>(resource:string, type:{ new(): T;}, ...params:any[]):Promise<T[]> {
+        return new Promise<T[]>((resolve, reject) => {
             let req:XMLHttpRequest = new XMLHttpRequest();
-            req.open(this._words.GET, this._apiEndpoint + resource, true);
+            req.open(this._words.GET, this._apiEndpoint + resource + this.formatUrlParams(params), true);
+            req.setRequestHeader('Content-Type', 'application/json');
             req.onload = () => {
                 if (req.readyState === 4) {
                     if (req.status === 200) {
@@ -59,11 +60,8 @@ export class SimpleHttp {
                     }
                 }
             };
-
             req.send();
         });
-
-        return promise;
     }
 
     public post<T>(resource:String, param:any):Promise<T> {
@@ -130,5 +128,18 @@ export class SimpleHttp {
         });
 
         return val;
+    }
+
+    private formatUrlParams(params:any[]):string {
+        return params.reduce((prev:string, current:any) => {
+                prev += '&' + Object
+                        .keys(current)
+                        .map(function (key) {
+                            return key + "=" + current[key]
+                        })
+                        .join("&");
+                return prev;
+            },
+            '?');
     }
 }

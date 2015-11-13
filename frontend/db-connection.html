@@ -28,7 +28,7 @@
                     </div>
                     <div class="row">
                         <button class="btn waves-effect waves-light" type="submit" name="action"
-                                [disabled]="!connectForm.form.valid || submitted">
+                                [disabled]="!connectForm.form.valid || submitted || service.isConnected">
                             Connect me
                             <i class="material-icons right">send</i>
                         </button>

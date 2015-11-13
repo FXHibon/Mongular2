@@ -30,7 +30,7 @@ export class DbConnection {
     submit() {
         if (!this.submitted) {
             this.submitted = true;
-            console.log({url: this.baseUrl, port: this.basePort}, ' submitted!')
+            console.log({url: this.baseUrl, port: this.basePort}, ' submitted!');
             this.service.login(new Login(this.baseUrl, this.basePort))
                 .then((msg) => {
                     console.log('Ok, now connected');

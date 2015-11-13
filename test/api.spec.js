@@ -49,9 +49,17 @@ describe('api', function () {
         });
 
         it('should get dbs', function (done) {
-            api.getDbs({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, data) {
+            api.getDbs({query: {url: '127.0.0.1', port: 27017}}, {}, function (err, data) {
                 if (err) throw err;
                 assert(data, 'Data should not be undefined');
+                done();
+            });
+
+        });
+
+        it('should not get dbs', function (done) {
+            api.getDbs({query: {}}, {}, function (err, data) {
+                assert(err instanceof InvalidUrlException, 'Url should not be accepted');
                 done();
             });
 

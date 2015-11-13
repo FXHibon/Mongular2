@@ -11,6 +11,8 @@ import { RouteParams } from 'angular2/router';
 
 import { CollectionEntity } from './bean/collection-entity';
 
+import { MongoService } from "./mongo-service";
+
 @Component({
     selector: 'collection-list',
     template: `
@@ -28,13 +30,16 @@ export class CollectionList {
     private dbName:string;
     private collections:CollectionEntity[];
 
-    constructor(params:RouteParams) {
+    constructor(params:RouteParams, public service:MongoService) {
         console.log('Entering CollectionList constructor');
         this.dbName = params.get('id');
 
-        this.collections = [];
-        this.collections.push(new CollectionEntity('Col 1'))
-        this.collections.push(new CollectionEntity('Col 2'))
-        this.collections.push(new CollectionEntity('Col 3'))
+        service.collections(this.dbName)
+            .then((collections:CollectionEntity[]) => {
+                this.collections = collections;
+            })
+            .catch((msg:any) => {
+                console.log('Cant get collections: ', msg);
+            });
     }
 }

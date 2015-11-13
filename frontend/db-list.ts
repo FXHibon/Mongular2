@@ -25,10 +25,10 @@ export class DbList {
 
     constructor(public service:MongoService) {
         console.log('Entering DbList constructor');
-        service.dbs.then((dbs) => {
+        service.dbs().then((dbs:DbEntity[]) => {
                 this.dbs = dbs;
             })
-            .catch((data) => {
+            .catch((data:any) => {
                 console.log('Error: ', data);
             });
     }
