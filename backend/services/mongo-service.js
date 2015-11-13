@@ -8,7 +8,7 @@ var Db = require('mongodb').Db;
 var logger = require('debug')('Mongular2:MongoService');
 
 
-// EXCEPTIONS;
+// EXCEPTIONS
 
 /**
  * Exception when url format is not valid
@@ -71,7 +71,7 @@ var _getConnectionString = function (server) {
     return 'mongodb://' + server.host + ':' + server.port;
 };
 /**
- * Connect to given database
+ * Connect to admin database
  * @param req Database address
  * @param cb Callback
  * @private
@@ -106,6 +106,7 @@ exports.getDbs = function (req, resp, cb) {
     _getAdminDb(req, function (err, client) {
         if (err) cb(err);
         client.admin().listDatabases(function (err, res) {
+            client.close();
             if (err) {
                 logger(err);
                 cb(err);
@@ -123,7 +124,11 @@ exports.getDbs = function (req, resp, cb) {
  * @param cb Callback
  */
 exports.login = function (req, cb) {
-    _getAdminDb(req, cb);
+    _getAdminDb(req, function (err, res) {
+        res.close();
+        if (err) cb(err);
+        cb(null, {});
+    });
 };
 
 /**
@@ -133,10 +138,10 @@ exports.login = function (req, cb) {
  */
 exports.getCollections = function (req, cb) {
 
-    var db = req.dbName;
+    var dbName = req.dbName;
 
-    if (!db) {
-        cb(new exports.InvalidParameterException('dbName = ' + db));
+    if (!dbName) {
+        cb(new exports.InvalidParameterException('dbName = ' + dbName));
         return;
     }
 
@@ -146,12 +151,14 @@ exports.getCollections = function (req, cb) {
         return;
     }
 
-    var db = new Db(db, server);
+    var db = new Db(dbName, server);
     db.open(function (err, db) {
         if (err) cb(Error('Can not open given db' + err.toString()));
 
         db.listCollections().toArray(function (err, collections) {
+            db.close();
             if (err) cb(err);
+            logger(collections);
             cb(null, collections);
         });
 

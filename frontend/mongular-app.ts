@@ -26,9 +26,9 @@ import { MongoService } from './mongo-service';
 
 
 @RouteConfig([
-    {path: '/', component: DbList, as: 'DbList'},
-    {path: '/connect', component: DbConnection, as: 'DbConnection'},
-    {path: '/:id', component: CollectionList, as: 'CollectionList'}
+    {path: '/', component: DbConnection, as: 'DbConnection'},
+    {path: '/db', component: DbList, as: 'DbList'},
+    {path: '/db/:id', component: CollectionList, as: 'CollectionList'}
 ])
 
 @Component({
