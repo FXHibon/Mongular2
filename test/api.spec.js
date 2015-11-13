@@ -73,14 +73,14 @@ describe('api', function () {
         });
 
         it('should get collections', function (done) {
-            api.getCollections({body: {url: '127.0.0.1', port: 27017, dbName: 'test'}}, {}, function (err, data) {
+            api.getCollections({query: {url: '127.0.0.1', port: 27017, dbName: 'test'}}, {}, function (err, data) {
                 if (err) throw err;
                 done();
             });
         });
 
         it('should not get collections', function (done) {
-            api.getCollections({body: {url: '127.0.0.1', port: 27017}}, {}, function (err, data) {
+            api.getCollections({query: {url: '127.0.0.1', port: 27017}}, {}, function (err, data) {
                 assert(err instanceof InvalidParameterException, 'parameter should not have been accepted');
                 done();
             });
