@@ -13,5 +13,15 @@
     "name": "logout",
     "url": "/logout",
     "method": "post"
+  },
+  {
+    "name": "getCollections",
+    "url": "/collections",
+    "method": "get"
+  },
+  {
+    "name": "getDocuments",
+    "url": "/documents",
+    "method": "get"
   }
 ]

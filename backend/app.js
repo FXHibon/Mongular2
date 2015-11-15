@@ -20,7 +20,7 @@ var routes = require('./api/routes.json');
 // TODO: refactor => it should not be here
 var InvalidUrlException = require('./services/mongo-service').InvalidUrlException;
 var ServerNotFoundException = require('./services/mongo-service').ServerNotFoundException;
-var NotConnectedException = require('./services/mongo-service').NotConnectedException;
+var InvalidParameterException = require('./services/mongo-service').InvalidParameterException;
 
 // Middle wares
 app.use(morgan('dev'));
@@ -40,10 +40,10 @@ routes.forEach(function (route) {
             if (err) {
                 data = err.toString();
                 if (err instanceof InvalidUrlException) {
-                    code = 400;
+                    code = 406;
                 } else if (err instanceof ServerNotFoundException) {
                     code = 404
-                } else if (err instanceof NotConnectedException) {
+                } else if (err instanceof InvalidParameterException) {
                     code = 403;
                 } else {
                     code = 400

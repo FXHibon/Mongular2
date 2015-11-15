@@ -11,6 +11,7 @@ import { DbEntity } from "./bean/db-entity";
 import { CollectionEntity } from "./bean/collection-entity";
 import { SimpleHttp } from "./simple-rest";
 import { Login } from './bean/login';
+import { DocumentEntity } from './bean/document-entity';
 
 @Injectable()
 export class MongoService {
@@ -28,9 +29,9 @@ export class MongoService {
     }
 
 
-    public collections(collectionName:string):Promise<CollectionEntity[]> {
+    public collections(dbName:string):Promise<CollectionEntity[]> {
         //noinspection TypeScriptValidateTypes
-        return this._http.getAll<CollectionEntity>('/collections', CollectionEntity, this._login, {collectionName: collectionName});
+        return this._http.getAll<CollectionEntity>('/collections', CollectionEntity, this._login, {dbName: dbName});
     }
 
     public login(login:Login):Promise<any> {
@@ -38,6 +39,14 @@ export class MongoService {
             .then(() => {
                 this._login = login;
             });
+    }
+
+    public documents(dbName:String, collectionName:String):Promise<DocumentEntity[]> {
+        //noinspection TypeScriptValidateTypes
+        return this._http.getAll<DocumentEntity>('/documents', DocumentEntity, this._login, {
+            dbName: dbName,
+            collectionName: collectionName
+        });
     }
 
     get isConnected():boolean {

@@ -23,12 +23,14 @@ import { DbConnection } from './db-connection';
 import { Toolbar } from './toolbar';
 import { MongularFooter } from './mongular-footer';
 import { MongoService } from './mongo-service';
+import { DocumentList } from './document-list';
 
 
 @RouteConfig([
     {path: '/', component: DbConnection, as: 'DbConnection'},
     {path: '/db', component: DbList, as: 'DbList'},
-    {path: '/db/:id', component: CollectionList, as: 'CollectionList'}
+    {path: '/db/:id', component: CollectionList, as: 'CollectionList'},
+    {path: '/db/:id/:collectionName', component: DocumentList, as: 'DocumentList'}
 ])
 
 @Component({

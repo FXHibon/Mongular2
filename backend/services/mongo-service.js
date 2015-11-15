@@ -5,6 +5,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var Server = require('mongodb').Server;
 var Db = require('mongodb').Db;
+var Collection = require('mongodb').Collection;
 var logger = require('debug')('Mongular2:MongoService');
 
 
@@ -104,7 +105,10 @@ var _getAdminDb = function (req, cb) {
  */
 exports.getDbs = function (req, resp, cb) {
     _getAdminDb(req, function (err, client) {
-        if (err) cb(err);
+        if (err) {
+            cb(err);
+            return;
+        }
         client.admin().listDatabases(function (err, res) {
             client && client.close();
             if (err) {
@@ -126,7 +130,10 @@ exports.getDbs = function (req, resp, cb) {
 exports.login = function (req, cb) {
     _getAdminDb(req, function (err, res) {
         res && res.close();
-        if (err) cb(err);
+        if (err) {
+            cb(err);
+            return;
+        }
         cb(null, {});
     });
 };
@@ -153,7 +160,10 @@ exports.getCollections = function (req, cb) {
 
     var db = new Db(dbName, server);
     db.open(function (err, db) {
-        if (err) cb(Error('Can not open given db' + err.toString()));
+        if (err) {
+            cb(Error('Can not open given db' + err.toString()));
+            return;
+        }
 
         db.listCollections().toArray(function (err, collections) {
             db && db.close();
@@ -163,4 +173,49 @@ exports.getCollections = function (req, cb) {
         });
 
     });
+};
+
+exports.getDocuments = function (req, cb) {
+    var collectionName = req.collectionName;
+    if (!collectionName) {
+        cb(new exports.InvalidParameterException('collectionName not defined'))
+        return;
+    }
+
+    var dbName = req.dbName;
+    if (!dbName) {
+        cb(new exports.InvalidParameterException('dbName not defined'));
+        return;
+    }
+
+    var server = _buildServer(req);
+    if (!server) {
+        cb(exports.InvalidUrlException(req));
+        return;
+    }
+
+    var db = new Db(dbName, server);
+    db.open(function (err, db) {
+        if (err) {
+            cb(new exports.ServerNotFoundException('Can\'t connect to server'));
+            return;
+        }
+
+        db.collection(collectionName, function (err, collection) {
+            if (err) {
+                cb(new exports.InvalidParameterException('Can not open given collection:' + collectionName));
+                return;
+            }
+
+            collection.find().toArray(function (err, docs) {
+                db && db.close();
+                cb(null, docs
+                    .map(function (doc) {
+                        return {data: doc};
+                    }));
+            });
+
+        });
+    });
+
 };

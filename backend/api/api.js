@@ -20,3 +20,7 @@ exports.logout = function (req, resp, cb) {
 exports.getCollections = function (req, resp, cb) {
     mongoService.getCollections(req.query, cb);
 };
+
+exports.getDocuments = function (req, resp, cb) {
+    mongoService.getDocuments(req.query, cb);
+};

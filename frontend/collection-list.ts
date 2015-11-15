@@ -7,7 +7,10 @@ import {
     CORE_DIRECTIVES
 } from 'angular2/angular2';
 
-import { RouteParams } from 'angular2/router';
+import {
+    RouteParams,
+    ROUTER_DIRECTIVES
+} from 'angular2/router';
 
 import { CollectionEntity } from './bean/collection-entity';
 
@@ -17,13 +20,13 @@ import { MongoService } from "./mongo-service";
     selector: 'collection-list',
     template: `
         <ul class="collection with-header">
-        <li class="collection-header"><h3>Collections list for {{ dbName }}</h3></li>
-            <li class="collection-item" *ng-for="#collection of collections">
+        <div class="collection-header"><h3>Collections list for {{ dbName }}</h3></div>
+            <a class="collection-item" *ng-for="#collection of collections" [router-link]="['DocumentList', {id: dbName, collectionName: 'colTest'}]">
                 {{ collection.name }}
-            </li>
+            </a>
         </ul>
     `,
-    directives: [CORE_DIRECTIVES]
+    directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES]
 })
 export class CollectionList {
 

@@ -7,5 +7,4 @@ export class DbEntity {
     constructor(public name?:string) {
     }
 
-
 }
