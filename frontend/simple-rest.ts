@@ -22,7 +22,7 @@ export class SimpleHttp {
         }
     }
 
-    public getOne<T>(resource:string, type:{ new(): T ;}, param:any = {}):Promise<T> {
+    public getOne<T>(resource:string, type:{ new():T ;}, param:any = {}):Promise<T> {
         return new Promise<T>((resolve, reject) => {
             let req:XMLHttpRequest = new XMLHttpRequest();
             req.open(this._words.GET, this._apiEndpoint + resource + this.formatUrlParams(param), true);
@@ -43,7 +43,7 @@ export class SimpleHttp {
         });
     }
 
-    public getAll<T>(resource:string, type:{ new(): T;}, ...params:any[]):Promise<T[]> {
+    public getAll<T>(resource:string, type:{ new():T;}, ...params:any[]):Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             let req:XMLHttpRequest = new XMLHttpRequest();
             req.open(this._words.GET, this._apiEndpoint + resource + this.formatUrlParams(params), true);
@@ -119,7 +119,7 @@ export class SimpleHttp {
      * @param type
      * @returns {T[]}
      */
-    private json2entities<T>(json:any, type:{new(): T}):T[] {
+    private json2entities<T>(json:any, type:{new():T}):T[] {
         let val:T[] = [];
 
         json.forEach((item:string) => {
