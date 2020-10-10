@@ -8,7 +8,7 @@
   },
   "homepage": "https://github.com/tchatel/FXHibon/Mongular2.git#readme",
   "devDependencies": {
-    "bower": "1.7.9",
+    "bower": "1.8.8",
     "chai": "3.5.0",
     "del": "2.2.1",
     "gulp": "3.9.1",
